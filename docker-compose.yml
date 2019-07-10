@@ -1,0 +1,8 @@
+version: "2"
+services:
+  food_service:
+    container_name: timetable_service
+    build: ./
+    restart: always
+    ports:
+      - "3002:3000"
