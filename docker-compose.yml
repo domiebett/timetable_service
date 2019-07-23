@@ -1,8 +1,13 @@
 version: "2"
 services:
-  food_service:
+  timetable_service:
     container_name: timetable_service
     build: ./
     restart: always
     ports:
       - "3002:3000"
+    networks:
+      - budget_app_network
+networks:
+  budget_app_network:
+    external: true
