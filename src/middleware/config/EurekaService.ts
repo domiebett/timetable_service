@@ -9,6 +9,9 @@ export class EurekaService {
 
     constructor() { }
 
+    /**
+     * Get eureka client.
+     */
     static getClient(): Eureka {
         if (!this._client) {
             this._client = new Eureka({

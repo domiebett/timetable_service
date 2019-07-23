@@ -17,17 +17,26 @@ export class Application {
         this.setUpApplication();
     }
 
+    /**
+     * Sets up all application requirements
+     */
     private async setUpApplication() {
         this.server = await this.serveExpressApp();
         this.eurekaClient = await this.setUpEureka();
     }
 
+    /**
+     * Expose express app via specified port.
+     */
     private async serveExpressApp() {
         return await this.express.app.listen(this.port, () => {
             logger.info(`App started on port ${this.port}`);
         });
     }
 
+    /**
+     * Setup for eureka service connection
+     */
     private async setUpEureka() {
         const client = EurekaService.getClient();
         await logger.info('Connecting to eureka...');
