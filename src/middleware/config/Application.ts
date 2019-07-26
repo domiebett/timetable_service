@@ -3,6 +3,8 @@ import { Http2Server } from 'http2';
 import { Eureka } from 'eureka-js-client';
 import { Express } from './Express';
 import { EurekaService } from './EurekaService';
+import { Tasks } from './../tasks';
+import { MongooseAccess } from '../../data-layer/adapters/MongoAccess';
 import { logger } from '@bit/domiebett.budget_app.logging';
 
 export class Application {
@@ -23,6 +25,11 @@ export class Application {
     private async setUpApplication() {
         this.server = await this.serveExpressApp();
         this.eurekaClient = await this.setUpEureka();
+        await this.connectToDatabase();
+        
+        // await Tasks.run();
+
+        await process.on('SIGINT', async () => await this.quitProcesses());
     }
 
     /**
@@ -50,5 +57,21 @@ export class Application {
         });
 
         return await client;
+    }
+
+    /**
+     * Connects to the database.
+     */
+    private async connectToDatabase() {
+        return await MongooseAccess.connect();
+    }
+
+    /**
+     * Quit all processes started out by the system.
+     */
+    private async quitProcesses() {
+        await this.server.close();
+        await this.eurekaClient.stop();
+        await Tasks.stopAll();
     }
 }
