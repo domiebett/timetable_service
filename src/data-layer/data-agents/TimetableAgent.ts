@@ -1,8 +1,13 @@
 import { TimetableModel } from './../models/TimetableModel';
-import { MealService } from './../../business-layer/MealService';
+import { MealService } from '../../business-layer/services/MealService';
+import { ITimetableDocument } from '../data-abstracts/interfaces';
 
 export class TimetableAgent {
-    constructor() { }
+    private mealService: MealService;
+
+    constructor() {
+        this.mealService = new MealService();
+    }
 
     /**
      * Add an entry into a timetable.
@@ -18,7 +23,7 @@ export class TimetableAgent {
     /**
      * Get all entries from the timetable
      */
-    async getTimetable() {
+    async getTimetableEntries() {
         return await TimetableModel.find({});
     }
 
@@ -27,7 +32,9 @@ export class TimetableAgent {
      * @param entryId - id for a timetable entry
      */
     async getSingleTimetableEntry(entryId) {
-        return await TimetableModel.findById(entryId);
+        const entry: ITimetableDocument = await TimetableModel.findOne({ _id: entryId }).lean();
+        entry.meal = await (new MealService()).fetchOne(entry.mealId)
+        return entry;
     }
 
     /**
@@ -35,9 +42,7 @@ export class TimetableAgent {
      * @param mealId - id of the meal to check for validity
      */
     private async mealIdIsValid(mealId) {
-        const mealService = new MealService();
-        const meal = await mealService.fetchOne(mealId);
-        console.log('boom', JSON.stringify(meal));
+        const meal = await this.mealService.fetchOne(mealId);
         return meal.id === mealId;
     }
 }

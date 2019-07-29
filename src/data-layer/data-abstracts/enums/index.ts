@@ -1,0 +1,1 @@
+export { DayOfTheWeek } from './DayOfTheWeek';

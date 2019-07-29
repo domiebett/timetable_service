@@ -1,6 +1,6 @@
 import * as cron from 'node-cron';
 import { logger } from '@bit/domiebett.budget_app.logging';
-import { MealService } from '../../business-layer/MealService';
+import { MealService } from '../../business-layer/services/MealService';
 
 export class Tasks {
     private static tasks: cron.ScheduledTask[] = [];

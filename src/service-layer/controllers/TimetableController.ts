@@ -1,9 +1,9 @@
-import { JsonController, Get, Res, Req, Post, Body } from 'routing-controllers';
+import { JsonController, Get, Res, Req, Post, Body, Param } from 'routing-controllers';
 import { Response, Request } from 'express';
 import { TimetableAgent } from '../../data-layer/data-agents';
 import { logger } from '@bit/domiebett.budget_app.logging';
 
-@JsonController('/timetable')
+@JsonController('/entries')
 export class TimetableController {
     private timetableAgent: TimetableAgent;
 
@@ -12,9 +12,15 @@ export class TimetableController {
     }
 
     @Get()
-    async getTimetable(@Res() res: Response ) {
-        const entries = await this.timetableAgent.getTimetable();
+    async getTimetableEntries(@Res() res: Response ) {
+        const entries = await this.timetableAgent.getTimetableEntries();
         return res.status(200).json({entries});
+    }
+
+    @Get('/:id')
+    async getSingleTimetableEntry(@Param('id') id: string, @Res() res: Response) {
+        const entry = await this.timetableAgent.getSingleTimetableEntry(id);
+        return res.status(200).json({ entry });
     }
 
     @Post()
