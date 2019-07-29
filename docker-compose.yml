@@ -8,6 +8,14 @@ services:
       - "3002:3000"
     networks:
       - budget_app_network
+  # timetable_service_db:
+  #   container_name: timetable_service_db
+  #   build: mongo:4
+  #   restart: always
+  #   ports:
+  #     - "27017:27017"
+  #   networks:
+  #     - budget_app_network
 networks:
   budget_app_network:
     external: true
