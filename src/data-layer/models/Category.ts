@@ -1,6 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { MinLength } from 'class-validator';
-import {Meal} from "./Meal";
+import { Meal } from "./Meal";
 
 const defaultTime = '20:00';
 

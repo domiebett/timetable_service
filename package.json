@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@bit/domiebett.budget_app.ip-resolver": "^1.0.0",
+    "@bit/domiebett.budget_app.jwt-authenticate": "^1.1.2",
     "@bit/domiebett.budget_app.logging": "^1.0.0",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
@@ -23,6 +24,7 @@
     "eureka-js-client": "^4.5.0",
     "express": "^4.17.1",
     "express-ping": "^1.4.0",
+    "mysql2": "^1.7.0",
     "node-cron": "^2.0.3",
     "pm2": "^3.5.1",
     "reflect-metadata": "^0.1.13",

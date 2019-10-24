@@ -3,7 +3,8 @@ import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as health from 'express-ping';
-import { useExpressServer } from 'routing-controllers';
+import * as jwt from '@bit/domiebett.budget_app.jwt-authenticate';
+import {Action, useExpressServer} from 'routing-controllers';
 
 export class Express {
     app: express.Application;
@@ -25,7 +26,15 @@ export class Express {
         const controllersPath = path.resolve('build', 'service-layer/controllers')
         useExpressServer(this.app, {
             controllers: [controllersPath + '/*.js'],
-            cors: true
+            cors: true,
+            authorizationChecker: async (action: Action) => {
+                const token = await jwt.getToken(action.request);
+                return jwt.isValidToken(token);
+            },
+            currentUserChecker: async (action: Action) => {
+                const token = await jwt.getToken(action.request);
+                return jwt.getCurrentUser(token);
+            }
         });
     }
 }
