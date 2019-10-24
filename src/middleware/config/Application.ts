@@ -3,15 +3,16 @@ import { Http2Server } from 'http2';
 import { Eureka } from 'eureka-js-client';
 import { Express } from './Express';
 import { EurekaService } from './EurekaService';
-import { Tasks } from './../tasks';
-import { MongooseAccess } from '../../data-layer/adapters/MongoAccess';
+import { DbAdapter} from "../../data-layer/adapters/Connection";
 import { logger } from '@bit/domiebett.budget_app.logging';
+import {Connection} from "typeorm";
 
 export class Application {
     private express: Express;
     private server: Http2Server;
     private eurekaClient: Eureka;
-    private port: number = config.get('express.port');
+    private port: number = parseInt(process.env.APP_PORT);
+    private dbConnection: Connection;
 
     constructor() {
         this.express = new Express();
@@ -25,9 +26,7 @@ export class Application {
     private async setUpApplication() {
         this.server = await this.serveExpressApp();
         this.eurekaClient = await this.setUpEureka();
-        await this.connectToDatabase();
-        
-        // await Tasks.run();
+        this.dbConnection = await this.connectToDatabase();
 
         await process.on('SIGINT', async () => await this.quitProcesses());
     }
@@ -36,7 +35,7 @@ export class Application {
      * Expose express app via specified port.
      */
     private async serveExpressApp() {
-        return await this.express.app.listen(this.port, () => {
+        return this.express.app.listen(this.port, () => {
             logger.info(`App started on port ${this.port}`);
         });
     }
@@ -56,14 +55,14 @@ export class Application {
             }
         });
 
-        return await client;
+        return client;
     }
 
     /**
      * Connects to the database.
      */
     private async connectToDatabase() {
-        return await MongooseAccess.connect();
+        return await DbAdapter.connect();
     }
 
     /**
@@ -72,6 +71,6 @@ export class Application {
     private async quitProcesses() {
         await this.server.close();
         await this.eurekaClient.stop();
-        await Tasks.stopAll();
+        await this.dbConnection.close();
     }
 }
