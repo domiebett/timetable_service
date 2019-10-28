@@ -1,6 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany, ManyToOne} from "typeorm";
 import {Column} from "./Column";
-import {DayOfTheWeek} from "../data-abstracts/enums";
+import {DayOfTheWeek} from "../../_types/enums";
 import {Category} from "./Category";
 
 

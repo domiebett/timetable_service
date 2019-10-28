@@ -7,7 +7,7 @@ const defaultTime = '20:00';
 @Entity()
 export class Category {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number = null;
 
     @Column({
         type: 'varchar',
@@ -15,17 +15,17 @@ export class Category {
         unique: true
     })
     @MinLength(2)
-    name: string;
+    name: string = null;
 
     @Column({
         type: "time",
         default: defaultTime
     })
-    defaultTime: string;
+    defaultTime: string = null;
 
     @OneToMany(type => Meal, meal => meal.category)
     meals: Meal[];
 
     @Column('integer')
-    userId: number;
+    userId: number = null;
 }
