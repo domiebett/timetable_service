@@ -4,7 +4,8 @@ import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as health from 'express-ping';
 import * as jwt from '@bit/domiebett.budget_app.jwt-authenticate';
-import {Action, useExpressServer} from 'routing-controllers';
+import {Action, useExpressServer, useContainer as routeUseContainer } from 'routing-controllers';
+import { Container } from 'typedi';
 
 export class Express {
     app: express.Application;
@@ -23,8 +24,11 @@ export class Express {
      * Sets up routing-controllers
      */
     setUpControllers() {
-        const controllersPath = path.resolve('build', 'service-layer/controllers')
-        useExpressServer(this.app, {
+        routeUseContainer(Container);
+
+        const controllersPath = path.resolve('build', 'service-layer/controllers');
+
+        return useExpressServer(this.app, {
             controllers: [controllersPath + '/*.js'],
             cors: true,
             authorizationChecker: async (action: Action) => {

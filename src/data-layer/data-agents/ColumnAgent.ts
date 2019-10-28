@@ -5,4 +5,6 @@ export class ColumnAgent extends BaseAgent {
     constructor() {
         super(Column);
     }
+
+
 }
