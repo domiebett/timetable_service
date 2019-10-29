@@ -3,7 +3,7 @@ import {CategoryAgent} from "../../data-layer/data-agents";
 import {IUser} from "../../_types/interfaces/IUser";
 import {ICategory} from "../../_types/interfaces";
 
-@JsonController('/categories')
+@JsonController('/timetable/categories')
 export class CategoryController {
     constructor(private categoryAgent: CategoryAgent) { }
 

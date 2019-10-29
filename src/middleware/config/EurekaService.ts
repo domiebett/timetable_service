@@ -3,7 +3,7 @@ import { IpResolver } from '@bit/domiebett.budget_app.ip-resolver';
 
 export class EurekaService {
     private static _client: Eureka;
-    private static _port: number = parseInt(process.env.APP_PORT);
+    private static _port: number;
     private static _ipAddress: string = IpResolver.getIPv4Address();
 
     constructor() { }
@@ -12,6 +12,8 @@ export class EurekaService {
      * Get eureka client.
      */
     static getClient(): Eureka {
+        this._port = parseInt(process.env.APP_PORT);
+
         if (!this._client) {
             this._client = new Eureka({
                 instance: {

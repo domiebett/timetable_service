@@ -6,12 +6,12 @@ import {IFindOptions} from "../../_types/interfaces";
 export abstract class BaseAgent {
     protected repository: Repository<Model>;
 
-    protected constructor(entity: Model) {
+    protected constructor(entity: { new(): Model }) {
         this.repository = getRepository(entity);
     }
 
-    protected async add(Entity: Model, requestBody: object) {
-        let entity = new Entity();
+    protected async add(Entity: { new(): Model }, requestBody: object) {
+        let entity: Model = new Entity();
 
         return this.save(entity, requestBody);
     }
