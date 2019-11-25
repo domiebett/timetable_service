@@ -18,6 +18,7 @@ export class Express {
         this.app.use(bodyParser.urlencoded({ extended: false }));
 
         this.setUpControllers();
+        this.errorHandler();
     }
 
     /**
@@ -27,9 +28,11 @@ export class Express {
         routeUseContainer(Container);
 
         const controllersPath = path.resolve('build', 'service-layer/controllers');
+        const interceptorsPath = path.resolve('build', 'middleware/interceptors');
 
         return useExpressServer(this.app, {
             controllers: [controllersPath + '/*.js'],
+            interceptors: [interceptorsPath + '/*.js'],
             cors: true,
             authorizationChecker: async (action: Action) => {
                 const token = await jwt.getToken(action.request);
@@ -39,6 +42,26 @@ export class Express {
                 const token = await jwt.getToken(action.request);
                 return jwt.getCurrentUser(token);
             }
+        });
+    }
+
+    /**
+     * Handles generic express http errors e.g 404
+     * Check src/middleware/express-middlewares/ErrorHandler.ts for
+     * for more robust error handling.
+     */
+    errorHandler() {
+        return this.app.use((req, res, next) => {
+            if (!res.headersSent) {
+                return res.status(404).send({
+                    message: `${req.method} for route: "${req.url}" not found.`,
+                    status: 404,
+                    name: 'URLNotFound',
+                    error: true
+                });
+            }
+
+            next();
         });
     }
 }
