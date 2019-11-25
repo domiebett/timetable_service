@@ -6,27 +6,33 @@
   "scripts": {
     "clean": "rimraf build",
     "compile": "tsc",
-    "start": "npm run clean && npm run compile && pm2-runtime start build/index.js"
+    "start": "npm run clean && npm run compile && pm2-runtime start build/index.js",
+    "dev": "nodemon -e ts --ignore \"./tests\" --exec \"npm run start\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@bit/domiebett.budget_app.ip-resolver": "^1.0.0",
+    "@bit/domiebett.budget_app.jwt-authenticate": "^1.1.2",
     "@bit/domiebett.budget_app.logging": "^1.0.0",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "config": "^3.1.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "eureka-js-client": "^4.5.0",
     "express": "^4.17.1",
     "express-ping": "^1.4.0",
-    "mongoose": "^5.6.6",
+    "lodash": "^4.17.15",
+    "mysql2": "^1.7.0",
     "node-cron": "^2.0.3",
     "pm2": "^3.5.1",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.7.7",
-    "typescript": "^3.5.2"
+    "typedi": "^0.8.0",
+    "typeorm": "^0.2.19",
+    "typescript": "^3.6.3"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
@@ -34,9 +40,10 @@
     "@types/cors": "^2.8.5",
     "@types/eureka-js-client": "^4.4.2",
     "@types/express": "^4.17.0",
-    "@types/mongoose": "^5.5.9",
+    "@types/lodash": "^4.14.144",
     "@types/node": "^12.0.10",
     "@types/node-cron": "^2.0.2",
+    "nodemon": "^1.19.3",
     "rimraf": "^2.6.3"
   }
 }

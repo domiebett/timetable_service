@@ -1,3 +1,4 @@
 .bit
 node_modules
 build
+.env
