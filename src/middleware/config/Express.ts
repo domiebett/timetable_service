@@ -17,23 +17,26 @@ export class Express {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
 
-        this.setUpControllers();
-        this.errorHandler();
+        this.setUpExpressServer();
+        this.app.use(this.errorHandler());
     }
 
     /**
      * Sets up routing-controllers
      */
-    setUpControllers() {
+    setUpExpressServer() {
         routeUseContainer(Container);
 
         const controllersPath = path.resolve('build', 'service-layer/controllers');
         const interceptorsPath = path.resolve('build', 'middleware/interceptors');
+        const middlewaresPath = path.resolve('build', 'middleware/express-middlewares');
 
         return useExpressServer(this.app, {
             controllers: [controllersPath + '/*.js'],
             interceptors: [interceptorsPath + '/*.js'],
+            middlewares: [middlewaresPath + '/*.js'],
             cors: true,
+            defaultErrorHandler: false,
             authorizationChecker: async (action: Action) => {
                 const token = await jwt.getToken(action.request);
                 return jwt.isValidToken(token);
@@ -51,7 +54,7 @@ export class Express {
      * for more robust error handling.
      */
     errorHandler() {
-        return this.app.use((req, res, next) => {
+        return (req, res, next) => {
             if (!res.headersSent) {
                 return res.status(404).send({
                     message: `${req.method} for route: "${req.url}" not found.`,
@@ -62,6 +65,6 @@ export class Express {
             }
 
             next();
-        });
+        };
     }
 }
