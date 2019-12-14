@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany, ManyToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany, ManyToOne, JoinTable} from "typeorm";
 import {Column} from "./Column";
 import {DayOfTheWeek} from "../../_types/enums";
 import {Category} from "./Category";
@@ -17,8 +17,8 @@ export class Meal {
     })
     day: DayOfTheWeek;
 
-    @ManyToMany( type => Column, column => column.meals)
-    columns: Column[];
+    @ManyToOne( type => Column, column => column.meals)
+    column: Column;
 
     @ManyToOne(type => Category, category => category.meals)
     category: Category;

@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany, OneToMany} from "typeorm";
 import {Meal} from "./Meal";
 
 @Entity()
@@ -19,7 +19,7 @@ export class Column {
     })
     name: string;
 
-    @ManyToMany(type => Meal, meal => meal.columns)
+    @OneToMany(type => Meal, meal => meal.column)
     meals: Meal[];
 
     @DbColumn('integer')
