@@ -2,6 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany, ManyToOn
 import {Column} from "./Column";
 import {DayOfTheWeek} from "../../_types/enums";
 import {Category} from "./Category";
+import { Day } from "./Day";
 
 
 @Entity()
@@ -12,15 +13,10 @@ export class Meal {
     @DbColumn()
     mealId: number;
 
-    @DbColumn({
-        type: 'varchar'
-    })
-    day: DayOfTheWeek;
+    @ManyToOne( type => Day, day => day.meals)
+    day: Day;
 
-    @ManyToOne( type => Column, column => column.meals)
-    column: Column;
-
-    @ManyToOne(type => Category, category => category.meals)
+    @ManyToOne(type => Day, day => day.meals)
     category: Category;
 
     @DbColumn({

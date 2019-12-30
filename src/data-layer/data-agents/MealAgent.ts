@@ -15,6 +15,7 @@ export class MealAgent extends BaseAgent {
         meal.userId = userId;
         meal.category = category;
         meal.mealId = mealObj.mealId;
+        meal.column = column;
 
         return this.repository.save(meal);
     }
