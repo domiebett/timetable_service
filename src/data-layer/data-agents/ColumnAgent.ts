@@ -30,7 +30,7 @@ export class ColumnAgent extends BaseAgent {
     async getColumns(userId) {
         const findOptions: IFindOptions = {
             where: { userId },
-            relations: ['days']
+            relations: ['days', 'days.meals']
         }
         return this.getAll(findOptions);
     }
@@ -39,7 +39,7 @@ export class ColumnAgent extends BaseAgent {
     async getSingleColumn(id, userId) {
         const findOptions: IFindOptions = {
             where: { userId },
-            relations: ['days']
+            relations: ['days', 'days.meals']
         };
 
         return this.getOne(id, findOptions);
@@ -49,7 +49,7 @@ export class ColumnAgent extends BaseAgent {
     async updateColumn(id, requestBody, userId) {
         const findOptions: IFindOptions = {
             where: { userId },
-            relations: ['days']
+            relations: ['days', 'days.meals']
         };
 
         return this.update(id, requestBody, findOptions);
