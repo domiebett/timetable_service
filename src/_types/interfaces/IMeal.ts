@@ -1,12 +1,11 @@
 import {DayOfTheWeek} from "../enums";
-import {Category, Column} from "../../data-layer/models";
+import {Category, Column, Day} from "../../data-layer/models";
 
 export interface IMeal {
     id?: number;
     mealId: number;
-    day: DayOfTheWeek;
-    columns?: Column[];
-    category: Category;
+    day?: Day;
+    category?: Category;
     time?: string;
     userId: number;
 }

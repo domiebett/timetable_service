@@ -8,16 +8,7 @@ export class MealAgent extends BaseAgent {
     }
 
     async addMeal(mealObj: IMeal, column: Column, category: Category, userId: number) {
-        const meal = new Meal();
-
-        meal.day = mealObj.day;
-        meal.time = mealObj.time;
-        meal.userId = userId;
-        meal.category = category;
-        meal.mealId = mealObj.mealId;
-        meal.column = column;
-
-        return this.repository.save(meal);
+        
     }
 
     async getMeal() {

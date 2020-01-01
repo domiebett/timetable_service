@@ -6,7 +6,7 @@ import {IFindOptions} from "../../_types/interfaces";
 export abstract class BaseAgent {
     protected repository: Repository<Model>;
 
-    protected constructor(entity: { new(): Model }) {
+    protected constructor(entity: { new(...args: any[]): Model }) {
         this.repository = getRepository(entity);
     }
 

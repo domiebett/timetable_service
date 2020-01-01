@@ -5,6 +5,12 @@ import { Column } from './Column';
 
 @Entity()
 export class Day {
+    constructor(column: Column, name: DayOfTheWeek, userId: number) {
+        this.column = column;
+        this.name = name;
+        this.userId = userId;
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -16,7 +22,7 @@ export class Day {
     @DbColumn('integer')
     userId: number;
 
-    @OneToMany(type => Meal, meal => meal.day)
+    @OneToMany(type => Meal, meal => meal.day, { onDelete: 'CASCADE'})
     meals: Meal[];
 
     @ManyToOne(type => Column, column => column.days)

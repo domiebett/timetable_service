@@ -8,6 +8,8 @@ const ERROR_CODES = {
 const isDuplicateError = (error) => (error.code && error.code === ERROR_CODES.DUPLICATE) || (error.message && error.message.indexOf('Duplicate entry') >= 0);
 const isEntityNotFound = (error) => (error.name && error.name === 'EntityNotFound');
 const isValidationError = (error) => (error instanceof Array && error.length > 0 && error[0].hasOwnProperty('constraints'));
+// is a custom error, already defined  in exceptions
+const isCustomError = (error) => (error instanceof BaseError);
 
 /**
  * Decorator function to catch errors in functions. Helps prevent repetition of try catch.
@@ -38,5 +40,6 @@ function handleError(error) {
     if (isDuplicateError(error)) throw new DuplicateEntryError(error.message);
     else if (isEntityNotFound(error)) throw new ResourceNotFoundError(error.message);
     else if (isValidationError(error)) throw new ValidationError(error);
+    else if (isCustomError(error)) throw error;
     else throw new BaseError('It seems something is not quite right with our systems. We apologise for any inconvenience.', error);
 }

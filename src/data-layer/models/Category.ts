@@ -23,7 +23,7 @@ export class Category {
     })
     defaultTime: string = null;
 
-    @OneToMany(type => Meal, meal => meal.category)
+    @OneToMany(type => Meal, meal => meal.category, { onDelete: 'SET NULL'})
     meals: Meal[];
 
     @Column('integer')
