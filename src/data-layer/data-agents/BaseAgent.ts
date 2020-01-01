@@ -2,6 +2,7 @@ import * as _ from "lodash";
 import {getRepository, Repository} from "typeorm";
 import {Model} from "../models";
 import {IFindOptions} from "../../_types/interfaces";
+import { IRequestBody } from "../../_types/interfaces/IRequestBody";
 
 export abstract class BaseAgent {
     protected repository: Repository<Model>;
@@ -24,7 +25,10 @@ export abstract class BaseAgent {
         return this.repository.findOneOrFail(id, findOptions);
     }
 
-    protected async update(id: number, requestBody: object, findOptions: IFindOptions = {}) {
+    protected async update(id: number, requestBody: IRequestBody, findOptions: IFindOptions = {}) {
+        // make sure the userId is not updated.
+        delete requestBody.userId;
+
         let entity = await this.getOne(id, findOptions);
         
         return this.save(entity, requestBody);

@@ -9,7 +9,7 @@ const isDuplicateError = (error) => (error.code && error.code === ERROR_CODES.DU
 const isEntityNotFound = (error) => (error.name && error.name === 'EntityNotFound');
 const isValidationError = (error) => (error instanceof Array && error.length > 0 && error[0].hasOwnProperty('constraints'));
 // is a custom error, already defined  in exceptions
-const isCustomError = (error) => (error instanceof BaseError);
+const isCustomError = (error) => (error instanceof BaseError || error.error);
 
 /**
  * Decorator function to catch errors in functions. Helps prevent repetition of try catch.

@@ -1,6 +1,6 @@
 import { Column } from "../models";
 import {BaseAgent} from "./BaseAgent";
-import { IColumn } from "../../_types/interfaces";
+import { IColumn, IFindOptions } from "../../_types/interfaces";
 import { DayOfTheWeek } from "../../_types/enums";
 import { Day } from "../models/Day";
 import { DayAgent } from "./DayAgent";
@@ -28,11 +28,40 @@ export class ColumnAgent extends BaseAgent {
 
     @Catch()
     async getColumns(userId) {
-        let findOptions = {
+        const findOptions: IFindOptions = {
             where: { userId },
             relations: ['days']
         }
         return this.getAll(findOptions);
+    }
+
+    @Catch()
+    async getSingleColumn(id, userId) {
+        const findOptions: IFindOptions = {
+            where: { userId },
+            relations: ['days']
+        };
+
+        return this.getOne(id, findOptions);
+    }
+
+    @Catch()
+    async updateColumn(id, requestBody, userId) {
+        const findOptions: IFindOptions = {
+            where: { userId },
+            relations: ['meals']
+        };
+
+        return this.update(id, requestBody, findOptions);
+    }
+
+    @Catch()
+    async removeColumn(id, userId) {
+        const findOptions: IFindOptions = {
+            where: { userId }
+        };
+
+        return this.remove(id, findOptions);
     }
 
     private async fillDaysInColumn(column: Column) {
