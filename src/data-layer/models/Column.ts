@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany, OneToMany} from "typeorm";
 import {Meal} from "./Meal";
+import { Day } from "./Day";
 
 @Entity()
 export class Column {
@@ -19,8 +20,8 @@ export class Column {
     })
     name: string;
 
-    @ManyToMany(type => Meal, meal => meal.columns)
-    meals: Meal[];
+    @OneToMany(type => Day, day => day.column, { onDelete: 'CASCADE', cascade: true})
+    days: Day[];
 
     @DbColumn('integer')
     userId: number;

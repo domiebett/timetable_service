@@ -1,7 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany, ManyToOne} from "typeorm";
-import {Column} from "./Column";
-import {DayOfTheWeek} from "../../_types/enums";
+import {Entity, PrimaryGeneratedColumn, Column as DbColumn, ManyToMany, ManyToOne, JoinTable} from "typeorm";
 import {Category} from "./Category";
+import { Day } from "./Day";
 
 
 @Entity()
@@ -12,15 +11,10 @@ export class Meal {
     @DbColumn()
     mealId: number;
 
-    @DbColumn({
-        type: 'varchar'
-    })
-    day: DayOfTheWeek;
+    @ManyToOne( type => Day, day => day.meals, { onDelete: 'CASCADE' })
+    day: Day;
 
-    @ManyToMany( type => Column, column => column.meals)
-    columns: Column[];
-
-    @ManyToOne(type => Category, category => category.meals)
+    @ManyToOne(type => Day, day => day.meals)
     category: Category;
 
     @DbColumn({
