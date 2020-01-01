@@ -7,7 +7,8 @@
     "clean": "rimraf build",
     "compile": "tsc",
     "start": "npm run clean && npm run compile && pm2-runtime start build/index.js",
-    "dev": "nodemon -e ts --ignore \"./tests\" --exec \"npm run start\""
+    "dev": "nodemon -e ts --ignore \"./tests\" --exec \"npm run start\"",
+    "db": "typeorm"
   },
   "keywords": [],
   "author": "",

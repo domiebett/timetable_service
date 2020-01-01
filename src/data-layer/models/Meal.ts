@@ -13,7 +13,7 @@ export class Meal {
     @DbColumn()
     mealId: number;
 
-    @ManyToOne( type => Day, day => day.meals)
+    @ManyToOne( type => Day, day => day.meals, { onDelete: 'CASCADE' })
     day: Day;
 
     @ManyToOne(type => Day, day => day.meals)

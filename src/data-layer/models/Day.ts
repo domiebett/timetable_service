@@ -22,9 +22,9 @@ export class Day {
     @DbColumn('integer')
     userId: number;
 
-    @OneToMany(type => Meal, meal => meal.day, { onDelete: 'CASCADE'})
+    @OneToMany(type => Meal, meal => meal.day, { onDelete: 'CASCADE' })
     meals: Meal[];
 
-    @ManyToOne(type => Column, column => column.days)
+    @ManyToOne(type => Column, column => column.days, { onDelete: 'CASCADE' })
     column: Column;
 }

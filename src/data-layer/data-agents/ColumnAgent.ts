@@ -49,7 +49,7 @@ export class ColumnAgent extends BaseAgent {
     async updateColumn(id, requestBody, userId) {
         const findOptions: IFindOptions = {
             where: { userId },
-            relations: ['meals']
+            relations: ['days']
         };
 
         return this.update(id, requestBody, findOptions);

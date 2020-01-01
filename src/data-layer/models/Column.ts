@@ -20,7 +20,7 @@ export class Column {
     })
     name: string;
 
-    @OneToMany(type => Day, day => day.column, { onDelete: 'CASCADE'})
+    @OneToMany(type => Day, day => day.column, { onDelete: 'CASCADE', cascade: true})
     days: Day[];
 
     @DbColumn('integer')
