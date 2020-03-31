@@ -7,6 +7,9 @@ services:
     ports:
       - "3003:3000"
     command: npm run dev
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
     networks:
       - budget_app_network
 networks:
