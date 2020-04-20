@@ -16,7 +16,7 @@ export class MealController {
 
     @Post()
     async addMeal(@CurrentUser() currentUser: IUser, @Body() requestBody: IMeal) {
-        const day = <Day> await this.dayAgent.getDay(requestBody.dayId, currentUser.id);
+        const day = <Day> await this.dayAgent.getSingleDay(requestBody.dayId, currentUser.id);
         let category = null;
         if (requestBody.categoryId) {
             category = <Category> await this.categoryAgent.getSingleCategory(requestBody.categoryId, currentUser.id);
