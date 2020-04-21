@@ -1,6 +1,6 @@
 import { Day, Column } from "../models";
 import { BaseAgent } from "./BaseAgent";
-import { DayOfTheWeek } from "../../_types/enums";
+import { DayOfTheWeek, DbOperations } from "../../_types/enums";
 import { Catch } from "../../business-layer/decorators/CatchError";
 import { IFindOptions } from "../../_types/interfaces";
 import { IDay } from "../../_types/interfaces/IDay";
@@ -53,6 +53,31 @@ export class DayAgent extends BaseAgent {
         }
 
         return this.getOne(id, findOptions);
+    }
+
+    @Catch()
+    public async getSingleDayFromColumn(column: Column, dayId: number) {
+        const findOptions: IFindOptions = {
+            where: { columnId: column.id },
+            relations: [ 'meals' ]
+        }
+
+        return this.getOne(dayId, findOptions);
+    }
+
+    @Catch()
+    public async performOperationOnDay(day: Day, operation: DbOperations) {
+        switch (operation) {
+            case DbOperations.CREATE || DbOperations.UPDATE:
+                return this.repository.save(day);
+                break;
+            case DbOperations.DELETE:
+                return this.repository.remove(day);
+                break;
+            default:
+                return;
+                break;
+        }
     }
 
     public async addDayToColumn(column: Column, name: DayOfTheWeek) {

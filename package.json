@@ -54,10 +54,16 @@
     "ts-jest": "^24.2.0"
   },
   "nodemonConfig": {
-    "ignore": [ "tests/*", "node_modules", ".git" ],
-    "watch": [ "src/*" ],
+    "ignore": [
+      "tests/*",
+      "node_modules",
+      ".git"
+    ],
+    "watch": [
+      "src/*"
+    ],
     "exec": "npm start",
     "ext": "ts",
     "delay": "2500"
- }
+  }
 }

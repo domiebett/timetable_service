@@ -3,7 +3,8 @@ import { DayAgent } from "../../data-layer/data-agents/DayAgent";
 import { IUser } from "../../_types/interfaces/IUser";
 import { IDay } from "../../_types/interfaces/IDay";
 import { ColumnAgent } from "../../data-layer/data-agents";
-import { Column } from "../../data-layer/models";
+import { Column, Day } from "../../data-layer/models";
+import { DbOperations } from "../../_types/enums";
 
 @JsonController('/timetable/days')
 export class DayController {
@@ -34,5 +35,33 @@ export class DayController {
     @Delete('/:dayId')
     async deleteDay(@CurrentUser() currentUser: IUser, @Param('dayId') dayId: number) {
         return this.dayAgent.removeDay(dayId, currentUser.id);
+    }
+}
+
+@JsonController('/columns/:columnId/days')
+export class ColumnDaysController {
+    constructor(private dayAgent: DayAgent, private columnAgent: ColumnAgent) { }
+
+    @Get()
+    async getAllDays(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number) {
+        const column = <Column> await this.columnAgent.getSingleColumn(columnId, currentUser.id);
+
+        return column.days;
+    }
+
+    @Get('/:dayId')
+    async getSingleDay(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number) {
+        const column = <Column> await this.columnAgent.getSingleColumn(columnId, currentUser.id);
+
+        return this.dayAgent.getSingleDayFromColumn(column, dayId);
+    }
+
+    @Delete('/:dayId')
+    async deleteDay(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number) {
+        const column = <Column> await this.columnAgent.getSingleColumn(columnId, currentUser.id);
+
+        const day = <Day> await this.dayAgent.getSingleDayFromColumn(column, dayId);
+
+        return this.dayAgent.performOperationOnDay(day, DbOperations.DELETE);
     }
 }
