@@ -4,6 +4,7 @@ import { DayOfTheWeek, DbOperations } from "../../_types/enums";
 import { Catch } from "../../business-layer/decorators/CatchError";
 import { IFindOptions } from "../../_types/interfaces";
 import { IDay } from "../../_types/interfaces/IDay";
+import { ColumnAgent } from "./ColumnAgent";
 
 export class DayAgent extends BaseAgent {
     constructor() {
@@ -27,7 +28,7 @@ export class DayAgent extends BaseAgent {
     }
 
     @Catch()
-    public async removeDay(id: number, userId: number) {
+    public async removeDayById(id: number, userId: number) {
         const findOptions: IFindOptions = {
             where: { userId }
         };
@@ -36,7 +37,7 @@ export class DayAgent extends BaseAgent {
     }
 
     @Catch()
-    public async updateDay(id: number, dayObj: IDay, userId: number) {
+    public async updateDayById(id: number, dayObj: IDay, userId: number) {
         const findOptions: IFindOptions = {
             where: { userId },
             relations: [ 'meals' ]
@@ -46,7 +47,7 @@ export class DayAgent extends BaseAgent {
     }
 
     @Catch()
-    public async getSingleDay(id: number, userId: number) {
+    public async getSingleDayById(id: number, userId: number) {
         const findOptions: IFindOptions = {
             where: { userId },
             relations: [ 'meals' ]
@@ -56,13 +57,28 @@ export class DayAgent extends BaseAgent {
     }
 
     @Catch()
-    public async getSingleDayFromColumn(column: Column, dayId: number) {
+    public async getSingleDayFromColumn(columnId: number, dayId: number, userId: number) {
         const findOptions: IFindOptions = {
-            where: { columnId: column.id },
+            where: { columnId, userId },
             relations: [ 'meals' ]
         }
 
         return this.getOne(dayId, findOptions);
+    }
+
+    @Catch()
+    public async updateDay(day: Day, requestBody: IDay) {
+        if (requestBody.column) {
+            day.column = requestBody.column;
+        }
+        day.name = requestBody.name;
+
+        return this.repository.save(day);
+    }
+
+    @Catch()
+    public async removeDay(day: Day) {
+        return this.repository.remove(day);
     }
 
     @Catch()

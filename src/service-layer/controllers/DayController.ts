@@ -17,7 +17,7 @@ export class DayController {
 
     @Get('/:dayId')
     async getSingleDay(@CurrentUser() currentUser: IUser, @Param('dayId') dayId) {
-        return this.dayAgent.getSingleDay(dayId, currentUser.id);
+        return this.dayAgent.getSingleDayById(dayId, currentUser.id);
     }
 
     @Post()
@@ -29,12 +29,12 @@ export class DayController {
 
     @Put('/:dayId')
     async updateDay(@CurrentUser() currentUser: IUser, @Body() requestBody: IDay, @Param('dayId') dayId: number) {
-        return this.dayAgent.updateDay(dayId, requestBody, currentUser.id);
+        return this.dayAgent.updateDayById(dayId, requestBody, currentUser.id);
     }
 
     @Delete('/:dayId')
     async deleteDay(@CurrentUser() currentUser: IUser, @Param('dayId') dayId: number) {
-        return this.dayAgent.removeDay(dayId, currentUser.id);
+        return this.dayAgent.removeDayById(dayId, currentUser.id);
     }
 }
 
@@ -51,17 +51,32 @@ export class ColumnDaysController {
 
     @Get('/:dayId')
     async getSingleDay(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number) {
-        const column = <Column> await this.columnAgent.getSingleColumn(columnId, currentUser.id);
-
-        return this.dayAgent.getSingleDayFromColumn(column, dayId);
+        return this.dayAgent.getSingleDayFromColumn(columnId, dayId, currentUser.id);
     }
 
     @Delete('/:dayId')
     async deleteDay(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number) {
-        const column = <Column> await this.columnAgent.getSingleColumn(columnId, currentUser.id);
-
-        const day = <Day> await this.dayAgent.getSingleDayFromColumn(column, dayId);
+        const day = <Day> await this.dayAgent.getSingleDayFromColumn(columnId, dayId, currentUser.id);
 
         return this.dayAgent.performOperationOnDay(day, DbOperations.DELETE);
+    }
+
+    @Put('/:dayId')
+    async updateDay(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number, @Body() requestBody: IDay) {
+        const day = <Day> await this.dayAgent.getSingleDayFromColumn(columnId, dayId, currentUser.id);
+
+        if (requestBody.columnId) {
+            const column = <Column> await this.columnAgent.getSingleColumn(columnId, currentUser.id);
+            requestBody.column = column;
+        }
+
+        return this.dayAgent.updateDay(day, requestBody);
+    }
+
+    @Post()
+    async addDay(@CurrentUser() currentUser: IUser, @Param('columnId') columnId, @Body() requestBody: IDay) {
+        const column = <Column> await this.columnAgent.getSingleColumn(columnId, currentUser.id);
+
+        return this.dayAgent.addDay(requestBody, column, currentUser.id);
     }
 }
