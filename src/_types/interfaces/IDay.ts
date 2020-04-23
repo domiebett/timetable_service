@@ -6,5 +6,6 @@ export interface IDay {
     name: DayOfTheWeek,
     userId: number,
     meals: Meal[],
-    column: Column
+    column: Column,
+    columnId?: number
 }
