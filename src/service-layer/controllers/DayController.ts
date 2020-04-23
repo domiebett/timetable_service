@@ -38,7 +38,7 @@ export class DayController {
     }
 }
 
-@JsonController('/columns/:columnId/days')
+@JsonController('/timetable/columns/:columnId/days')
 export class ColumnDaysController {
     constructor(private dayAgent: DayAgent, private columnAgent: ColumnAgent) { }
 
