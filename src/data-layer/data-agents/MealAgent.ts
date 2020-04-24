@@ -60,4 +60,13 @@ export class MealAgent extends BaseAgent {
 
         return this.remove(id, findOptions);
     }
+
+    @Catch()
+    async getSingleMealFromDay(dayId: number, mealId: number, userId: number) {
+        const findOptions: IFindOptions = {
+            where: { userId, dayId }
+        }
+
+        return this.getOne(mealId, findOptions);
+    }
 }
