@@ -16,7 +16,7 @@ export class MealAgent extends BaseAgent {
         meal.day = day;
         meal.mealId = mealObj.mealId;
         meal.time = mealObj.time;
-        meal.userId = mealObj.userId;
+        meal.userId = mealObj.userId || day.userId;
 
         if (category) {
             meal.category = category;
@@ -35,7 +35,7 @@ export class MealAgent extends BaseAgent {
     }
 
     @Catch()
-    async getMeal(id, userId) {
+    async getMealById(id, userId) {
         const findOptions: IFindOptions = {
             where: { userId }
         }
@@ -44,7 +44,7 @@ export class MealAgent extends BaseAgent {
     }
 
     @Catch()
-    async updateMeal(id, requestBody, userId) {
+    async updateMealById(id, requestBody, userId) {
         const findOptions: IFindOptions = {
             where: { userId },
         };
@@ -53,11 +53,25 @@ export class MealAgent extends BaseAgent {
     }
 
     @Catch()
-    async removeMeal(id, userId) {
+    async removeMealById(id, userId) {
         const findOptions: IFindOptions = {
             where: { userId }
         };
 
         return this.remove(id, findOptions);
+    }
+
+    @Catch()
+    async getSingleMealFromDay(dayId: number, mealId: number, userId: number) {
+        const findOptions: IFindOptions = {
+            where: { userId, dayId }
+        }
+
+        return this.getOne(mealId, findOptions);
+    }
+
+    @Catch()
+    async deleteMeal(meal: Meal) {
+        return this.repository.delete(meal);
     }
 }
