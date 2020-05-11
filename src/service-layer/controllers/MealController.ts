@@ -3,7 +3,7 @@ import { MealAgent, CategoryAgent, ColumnAgent } from "../../data-layer/data-age
 import { IUser } from "../../_types/interfaces/IUser";
 import { IMeal } from "../../_types/interfaces";
 import { DayAgent } from "../../data-layer/data-agents/DayAgent";
-import { Day, Category } from "../../data-layer/models";
+import { Day, Category, Meal } from "../../data-layer/models";
 
 @JsonController('/timetable/meals')
 export class MealController {
@@ -28,23 +28,23 @@ export class MealController {
 
     @Get('/:mealId')
     async getSingleMeal(@CurrentUser() currentUser: IUser, @Param('mealId') mealId: number) {
-        return await this.mealAgent.getMeal(mealId, currentUser.id);
+        return await this.mealAgent.getMealById(mealId, currentUser.id);
     }
 
     @Put('/:mealId')
     async updateMeal(@CurrentUser() currentUser: IUser, @Param('mealId') mealId: number, @Body() requestBody: IMeal) {
-        return await this.mealAgent.updateMeal(mealId, requestBody, currentUser.id);
+        return await this.mealAgent.updateMealById(mealId, requestBody, currentUser.id);
     }
 
     @Delete('/:mealId')
     async deleteMeal(@CurrentUser() currentUser: IUser, @Param('mealId') mealId: number) {
-        return await this.mealAgent.removeMeal(mealId, currentUser.id);
+        return await this.mealAgent.removeMealById(mealId, currentUser.id);
     }
 }
 
 @JsonController('/timetable/columns/:columnId/days/:dayId/meals')
 export class ColumnDayMealController {
-    constructor(private columnAgent: ColumnAgent, private dayAgent: DayAgent, private mealAgent: MealAgent) { }
+    constructor(private dayAgent: DayAgent, private mealAgent: MealAgent) { }
 
     @Get()
     async getAllMeals(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number) {
@@ -59,12 +59,22 @@ export class ColumnDayMealController {
     }
 
     @Post()
-    async addMeal(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number, @Param('mealId') mealId: number) {
-        
+    async addMeal(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number, @Body() requestObj: IMeal) {
+        const day = <Day> await this.dayAgent.getSingleDayFromColumn(columnId, dayId, currentUser.id);
+        return this.mealAgent.addMeal(requestObj, day);
     }
-}
 
-@JsonController('/timetable/categories/:categoryId/meals')
-export class CategoryMealController {
-    constructor(private categoryAgent: CategoryAgent, private mealAgent: MealAgent) { }
+    @Put('/:mealId')
+    async updateMeal(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number, @Param('mealId') mealId: number, @Body() requestBody: IMeal) {
+        const day = <Day> await this.dayAgent.getSingleDayFromColumn(columnId, dayId, currentUser.id);
+        const meal = <Meal> await this.mealAgent.getSingleMealFromDay(day.id, mealId, currentUser.id);
+        return this.mealAgent.updateMealById(meal.id, requestBody,currentUser.id);
+    }
+
+    @Delete('/:mealId')
+    async deleteMeal(@CurrentUser() currentUser: IUser, @Param('columnId') columnId: number, @Param('dayId') dayId: number, @Param('mealId') mealId: number) {
+        const day = <Day> await this.dayAgent.getSingleDayFromColumn(columnId, dayId, currentUser.id);
+        const meal = <Meal> await this.mealAgent.getSingleMealFromDay(day.id, mealId, currentUser.id);
+        return this.mealAgent.removeMealById(meal.id, currentUser.id);
+    }
 }

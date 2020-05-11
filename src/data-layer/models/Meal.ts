@@ -14,7 +14,7 @@ export class Meal {
     @ManyToOne( type => Day, day => day.meals, { onDelete: 'CASCADE' })
     day: Day;
 
-    @ManyToOne(type => Day, day => day.meals)
+    @ManyToOne(type => Category, category => category.meals)
     category: Category;
 
     @DbColumn({
